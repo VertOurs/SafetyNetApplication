@@ -1,2 +1,3 @@
 SafetyNetApplication
-ok test
+ok test rp
+
