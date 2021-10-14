@@ -1,3 +1,3 @@
 SafetyNetApplication
-ok test rp
+ok test rp repository
 
