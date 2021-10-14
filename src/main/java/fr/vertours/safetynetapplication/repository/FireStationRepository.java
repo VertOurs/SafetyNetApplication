@@ -1,2 +1,7 @@
-package fr.vertours.safetynetapplication.repository;public interface FireStationRepository {
+package fr.vertours.safetynetapplication.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface FireStationRepository extends JpaRepository<FireStation, Long> {
+
 }
