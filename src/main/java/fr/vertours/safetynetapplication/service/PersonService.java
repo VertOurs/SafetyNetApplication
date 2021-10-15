@@ -29,6 +29,13 @@ public class PersonService {
         personRepository.saveAll(collection);
     }
 
+    public Person find(String firstName, String lastName) {
+        return personRepository.findOneByFirstNameAndLastName(firstName,lastName);
+    }
+
+
+
+    //********************************************
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }

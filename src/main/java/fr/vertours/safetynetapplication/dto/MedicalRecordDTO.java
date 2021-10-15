@@ -7,7 +7,7 @@ public class MedicalRecordDTO {
 
     private String firstName;
     private String lastName;
-    private String birthDate;
+    private String birthdate;
     private Set<String> medications = new HashSet<>();
     private Set<String> allergies = new HashSet<>();
 
@@ -26,11 +26,11 @@ public class MedicalRecordDTO {
         this.lastName = lastName;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getBirthdate() {
+        return birthdate;
     }
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 
     public Set<String> getMedications() {
@@ -52,7 +52,7 @@ public class MedicalRecordDTO {
         return "MedicalRecordDTO{"
                 + "firstName='" + firstName + '\''
                 + ", lastName='" + lastName + '\''
-                + ", birthDate='" + birthDate + '\''
+                + ", birthDate='" + birthdate + '\''
                 + ", medications='" + medications + '\''
                 + ", allergies='" + allergies + '\''
                 + '}';
