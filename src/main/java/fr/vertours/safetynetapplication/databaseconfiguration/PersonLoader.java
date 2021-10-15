@@ -2,6 +2,7 @@ package fr.vertours.safetynetapplication.databaseconfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsoniter.JsonIterator;
+import fr.vertours.safetynetapplication.dto.MedicalRecordDTO;
 import fr.vertours.safetynetapplication.dto.PersonDTO;
 import fr.vertours.safetynetapplication.model.Address;
 import fr.vertours.safetynetapplication.model.FireStation;
@@ -11,6 +12,7 @@ import fr.vertours.safetynetapplication.repository.MedicalRecordRepository;
 import fr.vertours.safetynetapplication.repository.PersonRepository;
 import fr.vertours.safetynetapplication.service.AddressService;
 import fr.vertours.safetynetapplication.service.FireStationService;
+import fr.vertours.safetynetapplication.service.MedicalRecordService;
 import fr.vertours.safetynetapplication.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,11 +40,11 @@ public class PersonLoader {
     @Autowired
     FireStationService fireStationService;
 
+    @Autowired
+    MedicalRecordService medicalRecordService;
+
     @Bean
-    CommandLineRunner commandLineRunner(
-            FireStationRepository fireStationRepository,
-            MedicalRecordRepository medicalRecordRepository,
-            PersonRepository personRepository) {
+    CommandLineRunner commandLineRunner() {
 
         return args -> {
 
@@ -77,8 +79,7 @@ public class PersonLoader {
             }
             personService.saveAll(personSet);
 
-
-            /*List<Object> listOfFireStationDTO = (List<Object>) map.get("firestations");
+            List<Object> listOfFireStationDTO = (List<Object>) map.get("firestations");
             List<FireStation> fireStationsList = new ArrayList<>();
 
             for(Object fireStation : listOfFireStationDTO) {
@@ -96,10 +97,14 @@ public class PersonLoader {
                 }
             }
             System.out.println(listOfFireStationDTO);
-            fireStationService.saveAll(fireStationsList);*/
+            fireStationService.saveAll(fireStationsList);
 
+            List<Object> listOfMedicalRecordDTO = (List<Object>) map.get("medicalrecords");
 
-
+            for(Object medicalRecord : listOfMedicalRecordDTO) {
+                MedicalRecordDTO medicalRecordDTO = objectMapper.convertValue(medicalRecord, MedicalRecordDTO.class);
+                medicalRecordService.save(medicalRecordDTO);
+            }
 
 
         };

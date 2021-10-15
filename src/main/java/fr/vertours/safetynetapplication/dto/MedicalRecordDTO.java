@@ -1,12 +1,15 @@
 package fr.vertours.safetynetapplication.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MedicalRecordDTO {
 
     private String firstName;
     private String lastName;
-    private String birthDate;
-    private String medications;
-    private String allergies;
+    private String birthdate;
+    private Set<String> medications = new HashSet<>();
+    private Set<String> allergies = new HashSet<>();
 
 
     public String getFirstName() {
@@ -23,24 +26,24 @@ public class MedicalRecordDTO {
         this.lastName = lastName;
     }
 
-    public String getBirthDate() {
-        return birthDate;
+    public String getBirthdate() {
+        return birthdate;
     }
-    public void setBirthDate(String birthDate) {
-        this.birthDate = birthDate;
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
     }
 
-    public String getMedications() {
+    public Set<String> getMedications() {
         return medications;
     }
-    public void setMedications(String medications) {
+    public void setMedications(Set<String> medications) {
         this.medications = medications;
     }
 
-    public String getAllergies() {
+    public Set<String> getAllergies() {
         return allergies;
     }
-    public void setAllergies(String allergies) {
+    public void setAllergies(Set<String> allergies) {
         this.allergies = allergies;
     }
 
@@ -49,7 +52,7 @@ public class MedicalRecordDTO {
         return "MedicalRecordDTO{"
                 + "firstName='" + firstName + '\''
                 + ", lastName='" + lastName + '\''
-                + ", birthDate='" + birthDate + '\''
+                + ", birthDate='" + birthdate + '\''
                 + ", medications='" + medications + '\''
                 + ", allergies='" + allergies + '\''
                 + '}';

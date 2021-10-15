@@ -42,9 +42,9 @@ public class Person {
         this.phone = phone;
         this.email = email;
     }
-    //pk as t il besoin d'un constructoeur vide alors que ce n'est pas le cas dans community ?
    public Person() {}
 
+    
     public Long getId() {
         return id;
     }
