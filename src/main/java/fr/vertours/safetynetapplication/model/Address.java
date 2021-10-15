@@ -16,7 +16,7 @@ public class Address {
     @Column(nullable = false, unique = true)
     private String addressName;
 
-    @ManyToMany
+    @ManyToMany (mappedBy = "address")
     private Set<FireStation> fireStation;
 
 
@@ -33,12 +33,13 @@ public class Address {
     public void addFirestation(FireStation fireStation){
         if (!this.fireStation.contains(fireStation)) {
             this.fireStation.add(fireStation);
+            fireStation.addAdress(this);
         }
     }
     public void removeFirestation(FireStation fireStation) {
         if (this.fireStation.contains(fireStation)) {
-            fireStation.removeAddress(this);
             this.fireStation.remove(fireStation);
+            fireStation.removeAddress(this);
         }
     }
 
