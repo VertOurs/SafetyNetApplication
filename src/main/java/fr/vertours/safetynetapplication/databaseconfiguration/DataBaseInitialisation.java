@@ -49,41 +49,14 @@ public class DataBaseInitialisation {
 //*********************** Mise en place du JSON
             Map<String, Object> map = deserializeJson();
 
+//*********************** Variable qui vont bien.
             ObjectMapper objectMapper = new ObjectMapper();
-            Set<Address> addressSet = new HashSet();
-            Set<Person> personSet = new LinkedHashSet();
+            Set<Address> addressSet = returnSetOfAddressInPersonDTO(map, objectMapper);
+            Set<Person> personSet = returnSetOfPersonInPersonDTO(map, objectMapper);
+            List<Address> addressList = addressService.saveAll(addressSet);
 
-//********************** constitution de la set d'adresse et la set de person des personnes (map, objectmapper, addressSet, PersonnSet)-> retour Set d'adresse.
-            List<Object> listOfPersonDTO = (List<Object>) map.get("persons");       //********************          ????   Person
-
-
-            for(Object o : listOfPersonDTO) {                                           // j'itere sur une liste d'objet ayant que des attributs string
-                PersonDTO personDTO = objectMapper.convertValue(o, PersonDTO.class);    //je crée une personnDTO ayant les caracteristique du JSON
-
-                Address address = new Address();                                        // je crée un objet adresse vide
-                address.setAddressName(personDTO.getAddress());                         //je set l'attribut AddressName(String) par l'attribut adresse de mon personDTO
-                if (!addressSet.contains(address)) {                                    //Si mon objet adress n'est pas déja dans ma set d'adresse...
-                    addressSet.add(address);                                            //j'ajoute mon objet adresse
-                }
-                Person person = personDTO.createPerson();                               // Je crée un objet person qui coresspond a personnDTO avec des champs STring sauf un champ objet adresse
-
-                personSet.add(person);                                                  // je rajoute mes personnes dans ma set.
-                                                                                    //*********************            ?????  Person
-            }
-            List<Address> addressList = addressService.saveAll(addressSet);             // je crée une liste d'adresse avec l'adresseSet deja rempli d'adresse
-            for(Person person : personSet){                                             //jitere sur chaque personne de ma set de personne
-                Address personAddress = person.getAddress();                            // a chaque fois je crée un objet adresse qui corespond a l'adress dema personn
-
-                Address address = addressList.stream().filter((addressa)->              // je sais pas ????
-                        addressa.getAddressName().equals(personAddress
-                                .getAddressName())).findFirst().get();
-
-                person.setAddress(address);                                             //je setl'adresse de ma personne par l'objet adresse
-            }
-            personService.saveAll(personSet);                                           // je save ma set de personne qui possedent tous les objet adresse qui vont bien.
-
-
-
+//********************** Save Person et Address
+            savePersonAndAddressInDB(map, objectMapper, addressList,personSet);
 
 //*****************************  SAVE des FireStation(map, objectmapper)-> retour void
             saveFireStationInDB(map, objectMapper, addressList);
@@ -92,6 +65,34 @@ public class DataBaseInitialisation {
             saveMedicalRecordInDB(map, objectMapper);
         };
     }
+
+
+    public Set<Person> returnSetOfPersonInPersonDTO(Map<String, Object> map, ObjectMapper objectMapper){
+        Set<Person> personSet = new LinkedHashSet();
+        List<Object> listOfPersonDTO = (List<Object>) map.get("persons");
+        for(Object o : listOfPersonDTO) {
+            PersonDTO personDTO = objectMapper.convertValue(o, PersonDTO.class);
+            Person person = personDTO.createPerson();
+            personSet.add(person);
+        }
+        return personSet;
+    }
+
+    public Set<Address> returnSetOfAddressInPersonDTO(Map<String, Object> map, ObjectMapper objectMapper){
+        Set<Address> addressSet = new HashSet();
+        List<Object> listOfPersonDTO = (List<Object>) map.get("persons");
+        for(Object o : listOfPersonDTO) {
+            PersonDTO personDTO = objectMapper.convertValue(o, PersonDTO.class);
+            Address address = new Address();
+            address.setAddressName(personDTO.getAddress());
+            if (!addressSet.contains(address)) {
+                addressSet.add(address);
+            }
+        }
+
+        return addressSet;
+    }
+
 
     public Map<String, Object> deserializeJson() throws IOException {
         InputStream input = resource.getInputStream();
@@ -128,5 +129,17 @@ public class DataBaseInitialisation {
 
         fireStationService.saveAll(fireStationsList);
     }
+    public void savePersonAndAddressInDB (Map<String, Object> map, ObjectMapper objectMapper, List<Address> addressList, Set<Person> personSet) {
+        for(Person person : personSet){
+            Address personAddress = person.getAddress();
 
+            Address address = addressList.stream().filter((addressa)->
+                    addressa.getAddressName().equals(personAddress
+                            .getAddressName())).findFirst().get();
+
+            person.setAddress(address);
+        }
+        personService.saveAll(personSet);
+
+    }
 }
