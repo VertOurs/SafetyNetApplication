@@ -1,12 +1,15 @@
 package fr.vertours.safetynetapplication.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MedicalRecordDTO {
 
     private String firstName;
     private String lastName;
     private String birthDate;
-    private String medications;
-    private String allergies;
+    private Set<String> medications = new HashSet<>();
+    private Set<String> allergies = new HashSet<>();
 
 
     public String getFirstName() {
@@ -30,17 +33,17 @@ public class MedicalRecordDTO {
         this.birthDate = birthDate;
     }
 
-    public String getMedications() {
+    public Set<String> getMedications() {
         return medications;
     }
-    public void setMedications(String medications) {
+    public void setMedications(Set<String> medications) {
         this.medications = medications;
     }
 
-    public String getAllergies() {
+    public Set<String> getAllergies() {
         return allergies;
     }
-    public void setAllergies(String allergies) {
+    public void setAllergies(Set<String> allergies) {
         this.allergies = allergies;
     }
 
