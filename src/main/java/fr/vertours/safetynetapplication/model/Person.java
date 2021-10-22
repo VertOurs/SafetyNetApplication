@@ -7,6 +7,7 @@ import javax.persistence.*;
         columnNames = {"firstName", "lastName"})})
 
 public class Person {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,12 +43,12 @@ public class Person {
         this.phone = phone;
         this.email = email;
     }
-   public Person() {}
+    public Person(){}
 
-    
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -55,6 +56,7 @@ public class Person {
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -62,6 +64,7 @@ public class Person {
     public String getLastName() {
         return lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -69,6 +72,7 @@ public class Person {
     public Address getAddress() {
         return address;
     }
+
     public void setAddress(Address address) {
         this.address = address;
     }
@@ -76,6 +80,7 @@ public class Person {
     public String getCity() {
         return city;
     }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -83,6 +88,7 @@ public class Person {
     public String getZip() {
         return zip;
     }
+
     public void setZip(String zip) {
         this.zip = zip;
     }
@@ -90,6 +96,7 @@ public class Person {
     public String getPhone() {
         return phone;
     }
+
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -97,8 +104,8 @@ public class Person {
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
 }
-

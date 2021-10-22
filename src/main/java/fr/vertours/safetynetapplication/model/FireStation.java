@@ -17,9 +17,8 @@ public class FireStation {
     @Column(unique = true, nullable = false)
     private int station;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<Address> address;
-
 
     public FireStation() {
         this.address = new HashSet<>();
@@ -29,13 +28,13 @@ public class FireStation {
         this.station = station;
     }
 
-
     public void addAdress(Address address) {
         if (!this.address.contains(address)) {
             this.address.add(address);
             address.addFirestation(this);
         }
     }
+
     public void removeAddress(Address address) {
         if (this.address.contains(address)) {
             this.address.remove(address);
@@ -43,10 +42,10 @@ public class FireStation {
         }
     }
 
-
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,6 +53,7 @@ public class FireStation {
     public int getStation() {
         return station;
     }
+
     public void setStation(int station) {
         this.station = station;
     }
@@ -61,6 +61,7 @@ public class FireStation {
     public Set<Address> getAddress() {
         return address;
     }
+
     public void setAddress(Collection<Address> address) {
         this.address = new HashSet<>(address);
         for (Address address1 : this.address ) {
@@ -74,7 +75,7 @@ public class FireStation {
         if (o == null || getClass() != o.getClass()) return false;
         FireStation that = (FireStation) o;
         if(id==null) {
-            return station ==that.station;
+            return station == that.station;
         }
         return station == that.station ||
                 Objects.equals(id, that.id);
@@ -93,3 +94,4 @@ public class FireStation {
                 '}';
     }
 }
+

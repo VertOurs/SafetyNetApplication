@@ -126,8 +126,7 @@ public class DataBaseInitialisation {
                 fireStation2.addAdress(address);
             }
         }
-
-        fireStationService.saveAll(fireStationsList);
+        fireStationService.saveAllStations(fireStationsList);
     }
     public void savePersonAndAddressInDB (Map<String, Object> map, ObjectMapper objectMapper, List<Address> addressList, Set<Person> personSet) {
         for(Person person : personSet){
