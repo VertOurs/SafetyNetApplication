@@ -26,14 +26,17 @@ import java.util.*;
 
 @Configuration
 public class DataBaseInitialisation {
+
     @Value("classpath:Json/data.json")
     Resource resource;
 
     @Autowired
-    AddressService addressService;
-
+    AddressService addressService ;
+    @Autowired
     PersonDTOLoader personLoader;
+    @Autowired
     FireStationDTOLoader fireStationLoader;
+    @Autowired
     MedicalRecordDTOLoader medicalRecordLoader;
 
 

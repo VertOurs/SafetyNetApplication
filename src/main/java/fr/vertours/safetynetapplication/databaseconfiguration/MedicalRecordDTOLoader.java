@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
-
+@Component
 public class MedicalRecordDTOLoader {
 
     @Autowired
