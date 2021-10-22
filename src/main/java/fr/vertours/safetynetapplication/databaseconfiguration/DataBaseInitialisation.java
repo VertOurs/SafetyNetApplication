@@ -32,65 +32,27 @@ public class DataBaseInitialisation {
     @Autowired
     AddressService addressService;
 
-    @Autowired
-    PersonService personService;
+    PersonDTOLoader personLoader;
+    FireStationDTOLoader fireStationLoader;
+    MedicalRecordDTOLoader medicalRecordLoader;
 
-    @Autowired
-    FireStationService fireStationService;
 
-    @Autowired
-    MedicalRecordService medicalRecordService;
 
     @Bean
     CommandLineRunner commandLineRunner() {
-
         return args -> {
 
-//*********************** Mise en place du JSON
             Map<String, Object> map = deserializeJson();
 
-//*********************** Variable qui vont bien.
             ObjectMapper objectMapper = new ObjectMapper();
-            Set<Address> addressSet = returnSetOfAddressInPersonDTO(map, objectMapper);
-            Set<Person> personSet = returnSetOfPersonInPersonDTO(map, objectMapper);
+            Set<Address> addressSet = personLoader.returnSetOfAddressInPersonDTO(map, objectMapper);
+            Set<Person> personSet = personLoader.returnSetOfPersonInPersonDTO(map, objectMapper);
             List<Address> addressList = addressService.saveAll(addressSet);
 
-//********************** Save Person et Address
-            savePersonAndAddressInDB(map, objectMapper, addressList,personSet);
-
-//*****************************  SAVE des FireStation(map, objectmapper)-> retour void
-            saveFireStationInDB(map, objectMapper, addressList);
-
-//*********************** SAVE MedicalRecord
-            saveMedicalRecordInDB(map, objectMapper);
+            personLoader.savePersonAndAddressInDB(map, objectMapper, addressList,personSet);
+            fireStationLoader.saveFireStationInDB(map, objectMapper, addressList);
+            medicalRecordLoader.saveMedicalRecordInDB(map, objectMapper);
         };
-    }
-
-
-    public Set<Person> returnSetOfPersonInPersonDTO(Map<String, Object> map, ObjectMapper objectMapper){
-        Set<Person> personSet = new LinkedHashSet();
-        List<Object> listOfPersonDTO = (List<Object>) map.get("persons");
-        for(Object o : listOfPersonDTO) {
-            PersonDTO personDTO = objectMapper.convertValue(o, PersonDTO.class);
-            Person person = personDTO.createPerson();
-            personSet.add(person);
-        }
-        return personSet;
-    }
-
-    public Set<Address> returnSetOfAddressInPersonDTO(Map<String, Object> map, ObjectMapper objectMapper){
-        Set<Address> addressSet = new HashSet();
-        List<Object> listOfPersonDTO = (List<Object>) map.get("persons");
-        for(Object o : listOfPersonDTO) {
-            PersonDTO personDTO = objectMapper.convertValue(o, PersonDTO.class);
-            Address address = new Address();
-            address.setAddressName(personDTO.getAddress());
-            if (!addressSet.contains(address)) {
-                addressSet.add(address);
-            }
-        }
-
-        return addressSet;
     }
 
 
@@ -98,47 +60,10 @@ public class DataBaseInitialisation {
         InputStream input = resource.getInputStream();
         String data = Files.readString(Paths.get(resource.getURI()));
         Map<String, Object> map = JsonIterator.deserialize(data, Map.class);
-
         return map;
     }
 
-    public void saveMedicalRecordInDB (Map<String, Object> map, ObjectMapper objectMapper) {
-        List<Object> listOfMedicalRecordDTO = (List<Object>) map.get("medicalrecords");
-        for(Object medicalRecord : listOfMedicalRecordDTO) {
-            MedicalRecordDTO medicalRecordDTO = objectMapper.convertValue(medicalRecord, MedicalRecordDTO.class);
-            medicalRecordService.save(medicalRecordDTO);
-        }
-    }
-    public void saveFireStationInDB (Map<String, Object> map, ObjectMapper objectMapper, List<Address> addressList) {
-        List<Object> listOfFireStationDTO = (List<Object>) map.get("firestations");
-        List<FireStation> fireStationsList = new ArrayList<>();
-        for(Object fireStation : listOfFireStationDTO) {
-            Map<String, String> fireStationDTO = objectMapper.convertValue(fireStation, Map.class);
-            FireStation fireStation1 = new FireStation();
-            fireStation1.setStation((Integer.valueOf(fireStationDTO.get("station"))));
-            Address address = addressList.stream().filter((addressa)->addressa.getAddressName().equals(fireStationDTO.get("address"))).findFirst().get();
-            fireStation1.addAdress(address);
-            int index = fireStationsList.indexOf(fireStation1);
-            if(index == -1){
-                fireStationsList.add(fireStation1);
-            } else {
-                FireStation fireStation2 = fireStationsList.get(index);
-                fireStation2.addAdress(address);
-            }
-        }
-        fireStationService.saveAllStations(fireStationsList);
-    }
-    public void savePersonAndAddressInDB (Map<String, Object> map, ObjectMapper objectMapper, List<Address> addressList, Set<Person> personSet) {
-        for(Person person : personSet){
-            Address personAddress = person.getAddress();
 
-            Address address = addressList.stream().filter((addressa)->
-                    addressa.getAddressName().equals(personAddress
-                            .getAddressName())).findFirst().get();
 
-            person.setAddress(address);
-        }
-        personService.saveAll(personSet);
 
-    }
 }
